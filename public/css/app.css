@@ -1,0 +1,44 @@
+body {
+  margin: 0;
+  height: 768px;
+  width: 1024px;
+}
+
+img#subject-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+canvas#subject-canvas {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1024px;
+  height: 768px;
+}
+
+a {
+  cursor: pointer;
+  padding: 15px;
+  position: absolute;
+  border: 1px solid black;
+  border-radius: 3px;
+  top: 700px;
+  color: white;
+  background: black;
+  text-decoration: none;
+  font-family: Helvetica, Arial, sans-serif;
+  font-weight: 300;
+  font-size: 20px;
+}
+
+a#switch {
+  left: 20px;
+}
+
+a#send-erase {
+  right: 20px;
+}
+
+
