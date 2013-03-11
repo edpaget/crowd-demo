@@ -22,6 +22,6 @@
   [routes]
   (fn route
       [ev]
-      (-> routes
-          (filter (fn [route] (= ev.token (first route))))
-          (map (fn [route] (apply (rest route) (first route)))))))
+      ((-> (filter #(= ev/token (first %)) routes)
+           (first)
+           (second)))))

@@ -6,10 +6,9 @@
   "Start the Application Running"
   []
   (let [hist (history/create)]
-    (.log js/console hist)
     (-> hist 
         (history/listen-hash-change (history/router [["" sender/start-sender]
-                                                     ["#/sender" sender/start-sender]]))
+                                                     ["/sender" sender/start-sender]]))
         (history/start!))))
 
 (start-app)
