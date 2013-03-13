@@ -5,14 +5,16 @@
   [canvas]
  (.getContext canvas "2d"))
 
-(defn draw-line 
-  "Draws on a line on a canvas surface from a vector of points"
-  [surface [start & points]]
-  (.beginPath surface)
-  (.moveTo surface (first start)
-                   (second start))
-  (doseq [point points]
-         (.lineTo surface (first point)
-                          (second point)))
+(defn start-draw!
+  "Sets the path"
+  [surface x y]
   (set! (.-strokeStyle surface) "orange")
+  (set! (.-lineCap "round"))
+  (.beginPath surface)
+  (.moveTo surface x y))
+
+(defn add-segment!
+  "Adds an additional setment to a canvas that started a path"
+  [surface x y]
+  (.lineTo surface x y)
   (.stroke surface))

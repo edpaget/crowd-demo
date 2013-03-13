@@ -16,4 +16,3 @@
                      (onMessage [c j] (on-message c j))))
         (.add (StaticFileHandler. "./public"))
         (.start)))
-

@@ -25471,25 +25471,14 @@ goog.require("cljs.core");
 crowd_demo.canvas.surface = function surface(canvas) {
   return canvas.getContext("2d")
 };
-crowd_demo.canvas.draw_line = function draw_line(surface, p__16935) {
-  var vec__16938 = p__16935;
-  var start = cljs.core.nth.call(null, vec__16938, 0, null);
-  var points = cljs.core.nthnext.call(null, vec__16938, 1);
-  surface.beginPath();
-  surface.moveTo(cljs.core.first.call(null, start), cljs.core.second.call(null, start));
-  var G__16939_16940 = cljs.core.seq.call(null, points);
-  while(true) {
-    if(G__16939_16940) {
-      var point_16941 = cljs.core.first.call(null, G__16939_16940);
-      surface.lineTo(cljs.core.first.call(null, point_16941), cljs.core.second.call(null, point_16941));
-      var G__16942 = cljs.core.next.call(null, G__16939_16940);
-      G__16939_16940 = G__16942;
-      continue
-    }else {
-    }
-    break
-  }
+crowd_demo.canvas.start_draw_BANG_ = function start_draw_BANG_(surface, x, y) {
   surface.strokeStyle = "orange";
+  "round".lineCap = null;
+  surface.beginPath();
+  return surface.moveTo(x, y)
+};
+crowd_demo.canvas.add_segment_BANG_ = function add_segment_BANG_(surface, x, y) {
+  surface.lineTo(x, y);
   return surface.stroke()
 };
 goog.provide("goog.graphics.Path");
@@ -28634,22 +28623,22 @@ crowd_demo.sender.do_send_button_clicked = function do_send_button_clicked(soc) 
   var message = goog.dom.getElement("message");
   return crowd_demo.websocket.emit_BANG_.call(null, soc, message.value)
 };
-crowd_demo.sender.draw_current_marking = function draw_current_marking() {
-  var surface = crowd_demo.canvas.surface.call(null, goog.dom.getElement("subject-canvas"));
-  return crowd_demo.canvas.draw_line.call(null, surface, crowd_demo.sender.current_marking)
-};
-crowd_demo.sender.track_marking_BANG_ = function track_marking_BANG_(ev) {
+crowd_demo.sender.track_marking_BANG_ = function track_marking_BANG_(surface, ev) {
   crowd_demo.sender.current_marking = cljs.core.conj.call(null, crowd_demo.sender.current_marking, cljs.core.PersistentVector.fromArray([ev.offsetX, ev.offsetY], true));
-  return crowd_demo.sender.draw_current_marking.call(null)
+  return crowd_demo.canvas.add_segment_BANG_.call(null, surface, ev.offsetX, ev.offsetY)
 };
-crowd_demo.sender.stop_tracking_BANG_ = function stop_tracking_BANG_(ev) {
-  goog.events.unlisten(goog.dom.getElement("subject-canvas"), "mousemove", crowd_demo.sender.track_marking_BANG_);
+crowd_demo.sender.stop_tracking_BANG_ = function stop_tracking_BANG_(surface, ev) {
+  goog.events.removeAll(goog.dom.getElement("subject-canvas"), "mousemove");
   return crowd_demo.sender.current_marking = cljs.core.PersistentVector.EMPTY
 };
 crowd_demo.sender.do_canvas_mousedown = function do_canvas_mousedown(ev) {
   var canvas = goog.dom.getElement("subject-canvas");
-  goog.events.listen(canvas, "mousemove", crowd_demo.sender.track_marking_BANG_);
-  return goog.events.listenOnce(canvas, "mouseup", crowd_demo.sender.stop_tracking_BANG_)
+  var surface = crowd_demo.canvas.surface.call(null, canvas);
+  goog.events.listen(canvas, "mousemove", function(p1__23064_SHARP_) {
+    return crowd_demo.sender.track_marking_BANG_.call(null, surface, p1__23064_SHARP_)
+  });
+  goog.events.listenOnce(canvas, "mouseup", crowd_demo.sender.stop_tracking_BANG_);
+  return crowd_demo.canvas.start_draw_BANG_.call(null, surface, ev.offsetX, ev.offsetY)
 };
 crowd_demo.sender.start_sender = function start_sender() {
   var button = goog.dom.getElement("send-erase");
