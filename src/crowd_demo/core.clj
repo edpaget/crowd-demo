@@ -5,11 +5,11 @@
 
 (defn on-message
   [connection message]
-  (.send connection (s/upper-case message)))
+  (pprint message))
 
 (defn -main []
   (doto (WebServers/createWebServer 8080)
-        (.add "/marks-in"
+        (.add "/marks"
               (proxy [WebSocketHandler] []
                      (onOpen [c] (println "opened" c))
                      (onClose [c] (println "closed" c))
